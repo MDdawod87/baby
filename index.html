@@ -5,64 +5,80 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>من حمودي إلى حنونتي — مفاجأة</title>
   <style>
-    :root{
-      --bg1:#071021; --bg2:#2b0b26; --text:#fff; --glass:rgba(255,255,255,.06);
-    }
-    *{box-sizing:border-box} html,body{height:100%}
+    :root{--bg1:#071021;--bg2:#2b0b26;--text:#fff;--glass:rgba(255,255,255,.06)}
+    *{box-sizing:border-box}html,body{height:100%}
     body{
       margin:0;padding:0;font-family:Arial,system-ui,sans-serif;
-      background: radial-gradient(1200px 600px at 10% 20%, rgba(255,255,255,0.03), transparent),
+      background:radial-gradient(1200px 600px at 10% 20%,rgba(255,255,255,.03),transparent),
                  linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:var(--text);overflow:hidden;display:flex;align-items:center;justify-content:center;
+      color:var(--text);overflow:hidden;display:flex;align-items:center;justify-content:center
     }
     .card{
       width:min(980px,96vw);height:min(720px,92vh);border-radius:18px;position:relative;overflow:hidden;padding:28px;
       background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
-      box-shadow:0 18px 40px rgba(0,0,0,.55);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      backdrop-filter:blur(6px);
-      opacity:0; transition:opacity .8s;
+      box-shadow:0 18px 40px rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;
+      backdrop-filter:blur(6px);opacity:0;transition:opacity .8s
     }
     .card.show{opacity:1}
 
-    .glow{position:absolute;width:600px;height:600px;border-radius:50%;left:50%;top:30%;
-      transform:translate(-50%,-30%);
+    /* الخلفية والزينة */
+    .glow{position:absolute;width:720px;height:720px;border-radius:50%;left:50%;top:35%;
+      transform:translate(-50%,-35%);
       background:
-        radial-gradient(circle at 35% 30%, rgba(255,107,129,.14), transparent 25%),
-        radial-gradient(circle at 70% 70%, rgba(255,201,217,.06), transparent 28%);
-      filter:blur(36px);z-index:1}
+        radial-gradient(circle at 40% 30%, rgba(255,120,140,.18), transparent 30%),
+        radial-gradient(circle at 70% 70%, rgba(255,220,235,.10), transparent 28%);
+      filter:blur(42px);z-index:1}
+    .layer{position:absolute;inset:0;z-index:2;pointer-events:none}
 
-    .sprite{position:absolute;will-change:transform,opacity;pointer-events:none;z-index:2}
-    @keyframes fallPetal{0%{transform:translateY(-20vh) rotate(0)}50%{opacity:1}
-      100%{transform:translateY(120vh) rotate(720deg);opacity:0}}
-    @keyframes floatButter{0%{transform:translateY(0) translateX(0) rotate(-10deg)}
-      50%{transform:translateY(-8vh) translateX(6vw) rotate(10deg)}
-      100%{transform:translateY(0) translateX(0) rotate(-10deg)}}
+    /* يراعات متوهجة */
+    .firefly{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,200,.9);
+      box-shadow:0 0 14px rgba(255,255,170,.9),0 0 24px rgba(255,255,170,.6);opacity:.95;
+      animation:fly var(--dur) ease-in-out infinite}
+    @keyframes fly{
+      0%{transform:translate(var(--x0),var(--y0)) scale(.9)}
+      50%{transform:translate(var(--x1),var(--y1)) scale(1)}
+      100%{transform:translate(var(--x0),var(--y0)) scale(.9)}
+    }
+
+    /* قلوب بوكيه */
+    .bokeh{position:absolute;width:14px;height:14px;opacity:.12;filter:blur(1px);
+      background:conic-gradient(from 45deg,#fff 0 90deg,transparent 90deg),conic-gradient(from -45deg,#fff 0 90deg,transparent 90deg);
+      transform:translate(-50%,-50%) rotate(45deg);border-radius:2px}
+    .bokeh:before,.bokeh:after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#fff}
+    .bokeh:before{left:-7px;top:-7px}.bokeh:after{left:7px;top:-7px}
+    .bokeh{animation:floatB var(--bdur) linear infinite}
+    @keyframes floatB{0%{transform:translate(var(--bx),110vh) rotate(45deg)}100%{transform:translate(calc(var(--bx) + 4vw),-10vh) rotate(45deg)}}
 
     .center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:16px}
-    .heart{width:200px;height:200px;animation:heartbeat 1.05s ease-in-out infinite;
-      filter:drop-shadow(0 12px 28px rgba(0,0,0,.45));cursor:pointer}
-    @keyframes heartbeat{0%{transform:scale(.95)}30%{transform:scale(1.06)}60%{transform:scale(.98)}100%{transform:scale(.95)}}
+    .heart{width:220px;height:220px;cursor:pointer;filter:drop-shadow(0 12px 28px rgba(0,0,0,.45))}
+    .ring{position:absolute;inset:auto; width:260px;height:260px;border-radius:50%;
+      border:2px solid rgba(255,170,190,.35);box-shadow:0 0 22px rgba(255,140,170,.4) inset;animation:pulse 1.2s ease-in-out infinite;z-index:3}
+    @keyframes pulse{0%{transform:scale(.94)}50%{transform:scale(1.04)}100%{transform:scale(.94)}}
+
     .message{font-size:22px;text-align:center;line-height:1.4;max-width:84%;
       opacity:0;transform:translateY(16px);transition:all .8s cubic-bezier(.2,.9,.3,1)}
     .message.show{opacity:1;transform:translateY(0)}
     .fromto{font-weight:800;font-size:30px;margin-top:6px}
 
     .controls{position:absolute;right:16px;top:16px;z-index:6;display:flex;gap:10px}
-    .btn{background:var(--glass);border:1px solid rgba(255,255,255,.06);
-      padding:10px 14px;border-radius:12px;color:var(--text);cursor:pointer;font-size:13px}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:12px;color:var(--text);cursor:pointer;font-size:13px}
     .audio-bar{position:absolute;left:16px;top:16px;z-index:6;display:flex;gap:8px;align-items:center}
     .volume{width:100px}
 
-    /* شاشة البداية السوداء */
-    .overlay{position:fixed;inset:0;background:#000;display:block;z-index:999;cursor:pointer}
-
-    @media (max-width:520px){.heart{width:140px;height:140px}.fromto{font-size:22px}.message{font-size:18px}}
+    /* شاشة البداية */
+    .overlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999;cursor:pointer}
+    .tapText{font-size:20px;opacity:.9;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+      padding:14px 18px;border-radius:14px}
+    @media (max-width:520px){.heart{width:150px;height:150px}.fromto{font-size:22px}.message{font-size:18px}}
   </style>
 </head>
 <body>
   <div class="card" id="card" aria-live="polite">
     <div class="glow" aria-hidden="true"></div>
+
+    <!-- طبقات المؤثرات -->
+    <div class="layer" id="fireflies" aria-hidden="true"></div>
+    <div class="layer" id="bokeh" aria-hidden="true"></div>
 
     <div class="controls">
       <button class="btn" id="replay">إعادة تشغيل</button>
@@ -72,15 +88,17 @@
     <div class="audio-bar">
       <button class="btn" id="playPause">تشغيل ♫</button>
       <label style="font-size:13px">مستوى الصوت</label>
-      <input id="vol" class="volume" type="range" min="0" max="1" step="0.01" value="0.65">
+      <input id="vol" class="volume" type="range" min="0" max="1" step="0.01" value="0.70">
     </div>
 
     <div class="center">
+      <div class="ring"></div>
       <div class="heart" id="heart" title="إعادة الأنيميشن">
+        <!-- قلب بتدرج بسيط -->
         <svg viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
-              <stop offset="0%" stop-color="#ff8fa3"/><stop offset="100%" stop-color="#ff5578"/>
+              <stop offset="0%" stop-color="#ff9bb0"/><stop offset="100%" stop-color="#ff5b7e"/>
             </linearGradient>
           </defs>
           <path fill="url(#g1)" d="M23.6 0c-2.7 0-5.1 1.6-6.6 3.9C15.5 1.6 13.1 0 10.4 0 4.6 0 0 4.6 0 10.4c0 6.6 6.6 11.1 16 18.9 9.4-7.8 16-12.3 16-18.9C32 4.6 27.4 0 21.6 0z"/>
@@ -94,8 +112,15 @@
     </div>
   </div>
 
-  <!-- شاشة سوداء حتى أول ضغطة -->
-  <div class="overlay" id="overlay" title="اضغط للبدء"></div>
+  <!-- شاشة سوداء مع نص "اضغطي هنا يا عسل 🍯" -->
+  <div class="overlay" id="overlay" title="اضغطي للبدء">
+    <div class="tapText">🍯 اضغطي هنا يا عسل</div>
+  </div>
+
+  <!-- مكان تشغيل يوتيوب مخفي -->
+  <div id="yt-holder" style="position:absolute; width:0; height:0; overflow:hidden">
+    <div id="yt"></div>
+  </div>
 
   <script>
     // ===== CONFIG =====
@@ -106,13 +131,15 @@
         'إليكِ يا أحلى وردة، قلبي وكل أنفاسِي إلكِ.',
         'يا روحي، كل يوم بحبك أكتر.'
       ],
-      petalCount: 20,
-      butterflyCount: 9,
-      petalEmoji: '🌹',
-      butterflyEmoji: '🦋',
+      // المؤثرات
+      fireflyCount: 26,
+      bokehCount: 28,
 
-      // رابط MP3 مباشر. استبدله إن أردت.
-      musicFile: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+      // تشغيل من يوتيوب بعد أول ضغطة
+      youtubeId: 'WOjsBekdXPc', // من رابطك https://youtu.be/WOjsBekdXPc
+      startVolume: 70,           // 0..100
+      // اختياري: بديل MP3 مباشر إن رغبت لاحقاً
+      mp3Fallback: ''            // مثال: 'https://example.com/romantic.mp3'
     }
     // ===================
 
@@ -123,93 +150,119 @@
     const overlay = document.getElementById('overlay');
     const playBtn = document.getElementById('playPause');
     const vol = document.getElementById('vol');
+    const fireflies = document.getElementById('fireflies');
+    const bokeh = document.getElementById('bokeh');
 
     fromTo.textContent = `من ${CONFIG.sender} إلى ${CONFIG.receiver}`;
     msg.querySelector('.lines').textContent = CONFIG.messageLines.join('\\n');
 
     const rand = (min,max)=> Math.random()*(max-min)+min;
 
-    function buildSprites(){
-      // petals
-      for(let i=0;i<CONFIG.petalCount;i++){
-        const p = document.createElement('div');
-        p.className='sprite'; p.textContent = CONFIG.petalEmoji;
-        p.style.left = rand(-10,110)+'%';
-        p.style.top  = rand(-20,5)+'%';
-        const dur = rand(8,18), delay = rand(0,6);
-        p.style.animation = `fallPetal ${dur}s linear ${delay}s infinite`;
-        p.style.fontSize = rand(18,36)+'px';
-        p.style.opacity  = rand(0.6,0.98);
-        p.style.transform = `translateX(${rand(-60,60)}px)`;
-        card.appendChild(p);
+    // يراعات
+    function buildFireflies(){
+      for(let i=0;i<CONFIG.fireflyCount;i++){
+        const f = document.createElement('div');
+        f.className='firefly';
+        const w = window.innerWidth, h = window.innerHeight;
+        f.style.setProperty('--x0', Math.floor(rand(-0.1*w, 1.1*w))+'px');
+        f.style.setProperty('--y0', Math.floor(rand(-0.1*h, 1.1*h))+'px');
+        f.style.setProperty('--x1', Math.floor(rand(-0.1*w, 1.1*w))+'px');
+        f.style.setProperty('--y1', Math.floor(rand(-0.1*h, 1.1*h))+'px');
+        f.style.setProperty('--dur', rand(8,16)+'s');
+        fireflies.appendChild(f);
       }
-      // butterflies
-      for(let i=0;i<CONFIG.butterflyCount;i++){
-        const b = document.createElement('div');
-        b.className='sprite'; b.textContent = CONFIG.butterflyEmoji;
-        b.style.left = rand(6,92)+'%'; b.style.top = rand(10,70)+'%';
-        const dur = rand(6,14), delay = rand(0,4);
-        b.style.animation = `floatButter ${dur}s ease-in-out ${delay}s infinite`;
-        b.style.fontSize = rand(22,42)+'px';
-        b.style.opacity  = rand(0.75,1);
-        card.appendChild(b);
+    }
+    // قلوب بوكيه
+    function buildBokeh(){
+      for(let i=0;i<CONFIG.bokehCount;i++){
+        const d = document.createElement('div');
+        d.className='bokeh';
+        d.style.setProperty('--bx', rand(0,100)+'vw');
+        d.style.setProperty('--bdur', rand(12,22)+'s');
+        d.style.opacity = rand(.05,.16);
+        d.style.transform = 'translate(-50%,-50%) rotate(45deg)';
+        bokeh.appendChild(d);
       }
     }
 
     function replay(){
+      // تذبذب الحلقة والقلب والشظايا
       heart.style.animation='none'; void heart.offsetWidth;
       heart.style.animation='heartbeat 1.05s ease-in-out infinite';
-
-      const sprites = Array.from(document.querySelectorAll('.sprite'));
-      sprites.forEach(s=>{
-        s.style.animation='none'; void s.offsetWidth;
-        if(s.textContent===CONFIG.petalEmoji){
-          const dur=rand(8,18), delay=rand(0,6);
-          s.style.animation=`fallPetal ${dur}s linear ${delay}s infinite`;
-          s.style.left = rand(-10,110)+'%';
-        }else{
-          const dur=rand(6,14), delay=rand(0,4);
-          s.style.animation=`floatButter ${dur}s ease-in-out ${delay}s infinite`;
-          s.style.left = rand(6,92)+'%'; s.style.top = rand(10,70)+'%';
-        }
-      });
-
       msg.classList.remove('show'); setTimeout(()=>msg.classList.add('show'),60);
     }
-
     document.getElementById('replay').addEventListener('click', replay);
     heart.addEventListener('click', replay);
 
-    // الصوت
-    const audio = new Audio(CONFIG.musicFile);
-    audio.crossOrigin = 'anonymous';
-    audio.preload = 'auto';
-    audio.loop = true;
-    audio.volume = parseFloat(vol.value);
+    // ===== الصوت (يوتيوب أو MP3) =====
+    let YTready = false, ytPlayer = null, audioTag = null, usingYT = !!CONFIG.youtubeId;
 
-    playBtn.addEventListener('click', async ()=>{
-      if(audio.paused){
-        try{ await audio.play(); playBtn.textContent='إيقاف'; }catch(_){}
-      }else{
-        audio.pause(); playBtn.textContent='تشغيل ♫';
+    function setVolume(v){
+      if(usingYT && ytPlayer){ ytPlayer.setVolume(v*100); }
+      if(!usingYT && audioTag){ audioTag.volume = v; }
+    }
+    function playAudio(){
+      if(usingYT && ytPlayer){ ytPlayer.playVideo(); playBtn.textContent='إيقاف'; }
+      if(!usingYT && audioTag){ audioTag.play().catch(()=>{}); playBtn.textContent='إيقاف'; }
+    }
+    function pauseAudio(){
+      if(usingYT && ytPlayer){ ytPlayer.pauseVideo(); playBtn.textContent='تشغيل ♫'; }
+      if(!usingYT && audioTag){ audioTag.pause(); playBtn.textContent='تشغيل ♫'; }
+    }
+
+    // أزرار الصوت
+    playBtn.addEventListener('click', ()=>{ 
+      if(usingYT && ytPlayer){
+        const st = ytPlayer.getPlayerState();
+        (st===1)? pauseAudio(): playAudio();
+      }else if(audioTag){
+        audioTag.paused? playAudio(): pauseAudio();
       }
     });
-    vol.addEventListener('input', ()=> audio.volume = vol.value);
+    vol.addEventListener('input', ()=> setVolume(parseFloat(vol.value)));
+
+    // تحميل API يوتيوب
+    if(usingYT){
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+      window.onYouTubeIframeAPIReady = ()=>{
+        YTready = true;
+        ytPlayer = new YT.Player('yt', {
+          videoId: CONFIG.youtubeId,
+          playerVars: {autoplay:0, controls:0, modestbranding:1, loop:1, playlist:CONFIG.youtubeId},
+          events:{
+            onReady: ()=>{ ytPlayer.setVolume(CONFIG.startVolume); },
+            onStateChange: (e)=>{ /* 1=playing */ }
+          }
+        });
+      }
+    } else if (CONFIG.mp3Fallback){
+      audioTag = new Audio(CONFIG.mp3Fallback);
+      audioTag.loop = true;
+      audioTag.preload = 'auto';
+      audioTag.volume = parseFloat(vol.value);
+    }
 
     // البدء: أول ضغطة تشغل كل شيء
     async function startShow(){
       if(document.documentElement.requestFullscreen){
         try{ await document.documentElement.requestFullscreen(); }catch(_){}
       }
-      buildSprites();
-      card.classList.add('show');
-      msg.classList.add('show');
-      try{ await audio.play(); playBtn.textContent='إيقاف'; }catch(_){}
+      buildFireflies(); buildBokeh();
+      card.classList.add('show'); msg.classList.add('show');
+      // ابدأ الصوت بعد التفاعل
+      if(usingYT){
+        if(YTready && ytPlayer){ playAudio(); }
+        else{
+          const iv = setInterval(()=>{ if(ytPlayer){ clearInterval(iv); playAudio(); } }, 120);
+        }
+      }else if(audioTag){ playAudio(); }
       overlay.style.display='none';
     }
     overlay.addEventListener('click', startShow, { once:true });
 
-    // زر تنزيل نسخة من الصفحة
+    // تنزيل نسخة من الصفحة
     document.getElementById('download').addEventListener('click', ()=>{
       const doc = `<!doctype html>\\n${document.documentElement.outerHTML}`;
       const blob = new Blob([doc],{type:'text/html'});
@@ -217,9 +270,6 @@
       const a = document.createElement('a'); a.href = url; a.download = 'index.html';
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
-
-    // اختصار R لإعادة التشغيل
-    window.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='r') replay(); });
   </script>
 </body>
 </html>
