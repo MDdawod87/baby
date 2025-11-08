@@ -1,24 +1,21 @@
+```html
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ممن ابو عيالك المستقبلي — مفاجأة</title>
+  <title>مفاجأة</title>
   <style>
-    :root{
-      --bg1:#050914; --bg2:#220a1f; --text:#fff; --glass:rgba(255,255,255,.07);
-    }
+    :root{ --bg1:#050914; --bg2:#220a1f; --text:#fff; --glass:rgba(255,255,255,.07); }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font-family:Arial,system-ui,sans-serif; color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 12% 18%,rgba(255,255,255,.03),transparent),
-        linear-gradient(180deg,var(--bg1),var(--bg2));
+      background:radial-gradient(1200px 600px at 12% 18%,rgba(255,255,255,.03),transparent),
+                 linear-gradient(180deg,var(--bg1),var(--bg2));
       overflow:hidden;
     }
 
-    /* شاشة كاملة */
     .card{
       position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
       background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
@@ -27,7 +24,6 @@
     }
     .card.show{opacity:1}
 
-    /* طبقات مؤثرات */
     .layer{position:absolute; inset:0; pointer-events:none}
 
     .glow{position:absolute; width:120vmin; height:120vmin; left:50%; top:45%;
@@ -38,7 +34,6 @@
       filter:blur(42px); animation:hue 12s linear infinite; z-index:1}
     @keyframes hue{to{filter:hue-rotate(360deg) blur(42px)}}
 
-    /* غيوم */
     .cloud{position:absolute; top:var(--t); left:-30vw; width:var(--w); height:var(--h);
       filter:blur(10px); opacity:.25;
       background:
@@ -48,13 +43,11 @@
       animation:cloudMove var(--dur) linear infinite; z-index:2}
     @keyframes cloudMove{to{transform:translateX(150vw)}}
 
-    /* مطر */
     .rain .drop{position:absolute; width:2px; height:14px; background:rgba(255,255,255,.28);
       left:var(--x); top:-20vh; transform:rotate(10deg);
       animation:rainFall var(--d) linear var(--delay) infinite; filter:blur(.2px)}
     @keyframes rainFall{to{transform:translate(0,110vh) rotate(10deg)}}
 
-    /* بتلات ورد */
     .petal{position:absolute; left:var(--px); top:-10vh; z-index:3;
       animation:petalFall var(--pdur) linear var(--pdelay) infinite; opacity:.95; font-size:22px}
     @keyframes petalFall{
@@ -63,7 +56,6 @@
       100%{transform:translate(0,115vh) rotate(720deg); opacity:0}
     }
 
-    /* فراشات */
     .butterfly{position:absolute; z-index:4; font-size:26px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
     .butterfly span{display:inline-block; animation:flap .6s ease-in-out infinite}
     @keyframes flap{50%{transform:scale(1.15)}}
@@ -73,14 +65,12 @@
       100%{transform:translate(calc(var(--sx) + 85vw), calc(var(--sy) + 4vh)) rotate(0deg)}
     }
 
-    /* يراعات */
     .firefly{position:absolute; width:4px; height:4px; border-radius:50%;
       background:#ffd54f; box-shadow:0 0 10px #ffd54f, 0 0 18px #ffd54f;
       animation:twinkle 1.8s ease-in-out infinite alternate, drift var(--fdur) linear infinite; opacity:.9}
     @keyframes twinkle{to{opacity:.2; transform:scale(.7)}}
     @keyframes drift{to{transform:translate(var(--dx),var(--dy))}}
 
-    /* قلوب بوكيه */
     .bokeh-heart{position:absolute; width:var(--s); height:var(--s); opacity:.14; transform:translate(-50%,-50%);
       background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,.9) 0 20%, transparent 22%),
@@ -90,7 +80,6 @@
     .bokeh{animation:floatUp var(--bdur) linear infinite}
     @keyframes floatUp{from{transform:translate(-50%,10vh) scale(1)} to{transform:translate(-50%,-20vh) scale(1.2)}}
 
-    /* المركز */
     .center{position:relative; z-index:6; display:flex; flex-direction:column; align-items:center; gap:20px}
     .heart{width:min(36vmin,360px); height:min(36vmin,360px); cursor:pointer;
       filter:drop-shadow(0 18px 34px rgba(0,0,0,.55)); animation:heartbeat 1.05s ease-in-out infinite}
@@ -106,7 +95,6 @@
       padding:10px 14px; border-radius:12px; font-size:13px; cursor:pointer}
     .volume{width:120px}
 
-    /* شاشة البداية */
     .overlay{position:fixed; inset:0; background:#000; display:flex; align-items:center; justify-content:center; z-index:999; cursor:pointer}
     .tap{display:flex; flex-direction:column; align-items:center; gap:22px}
     .tap .emoji{font-size:54px; animation:pulse 1.2s ease-in-out infinite}
@@ -120,7 +108,6 @@
     @keyframes shine{to{filter:hue-rotate(360deg)}}
     @keyframes bob{50%{transform:translateY(-8px)}}
     @keyframes pulse{50%{transform:scale(1.06)}}
-
     @media (max-width:520px){ .message{font-size:18px} }
   </style>
 </head>
@@ -128,7 +115,6 @@
   <div class="card" id="card" aria-live="polite">
     <div class="glow" aria-hidden="true"></div>
 
-    <!-- طبقات مؤثرات -->
     <div class="layer" id="clouds" aria-hidden="true"></div>
     <div class="layer rain" id="rain" aria-hidden="true"></div>
     <div class="layer" id="petals" aria-hidden="true"></div>
@@ -156,12 +142,11 @@
 
       <div class="message" id="msg">
         <div class="lines" id="lines"></div>
-        <div class="fromto" id="fromTo"></div>
+        <div class="fromto" id="fromTo">من ابو عيالك المستقبلي</div>
       </div>
     </div>
   </div>
 
-  <!-- شاشة بداية -->
   <div class="overlay" id="overlay" title="اضغطي للبدء">
     <div class="tap">
       <div class="emoji">🍯✨</div>
@@ -170,19 +155,10 @@
   </div>
 
   <script>
-    // ===== CONFIG =====
     const CONFIG = {
-      sender:'حمودي', receiver:'حنونتي',
       startVolume:0.70,
-      clouds: [ // top %, width, height, duration s
-        ['8%','60vw','22vh',70], ['18%','40vw','16vh',55], ['28%','50vw','18vh',62],
-        ['60%','65vw','22vh',74], ['72%','42vw','16vh',58]
-      ],
-      rainDrops: 140,
-      petalCount: 40,
-      butterflyCount: 6,
-      fireflyCount: 28,
-      bokehCount: 22,
+      clouds:[['8%','60vw','22vh',70],['18%','40vw','16vh',55],['28%','50vw','18vh',62],['60%','65vw','22vh',74],['72%','42vw','16vh',58]],
+      rainDrops:140, petalCount:40, butterflyCount:6, fireflyCount:28, bokehCount:22,
       musicFile:'New-Lands-Long-version(chosic.com).mp3',
       romanticLines:[
         '❤️ إنتِ نبض قلبي وحكايتي الحلوة.',
@@ -196,30 +172,25 @@
         '💘 أنتِ الجواب لكل أسئلتي.',
         '🫶 يدك بيدي… والدنيا تمام.'
       ]
-    }
-    // ===================
+    };
 
-    const card = document.getElementById('card');
-    const clouds = document.getElementById('clouds');
-    const rain   = document.getElementById('rain');
-    const petals = document.getElementById('petals');
-    const butterflies = document.getElementById('butterflies');
-    const fireflies = document.getElementById('fireflies');
-    const bokeh = document.getElementById('bokeh');
-    const overlay= document.getElementById('overlay');
-    const lines  = document.getElementById('lines');
-    const fromTo = document.getElementById('fromTo');
-    const heart  = document.getElementById('heart');
-    const playBtn= document.getElementById('playPause');
-    const vol    = document.getElementById('vol');
+    const card=document.getElementById('card');
+    const clouds=document.getElementById('clouds');
+    const rain=document.getElementById('rain');
+    const petals=document.getElementById('petals');
+    const butterflies=document.getElementById('butterflies');
+    const fireflies=document.getElementById('fireflies');
+    const bokeh=document.getElementById('bokeh');
+    const overlay=document.getElementById('overlay');
+    const lines=document.getElementById('lines');
+    const heart=document.getElementById('heart');
+    const playBtn=document.getElementById('playPause');
+    const vol=document.getElementById('vol');
 
-    fromTo.textContent = `من ${CONFIG.sender} إلى ${CONFIG.receiver}`;
-
-    // رسائل
-    let msgIndex = 0;
+    let msgIndex=0;
     function setMessage(i){
-      lines.style.opacity = 0;
-      setTimeout(()=>{ lines.textContent = CONFIG.romanticLines[i % CONFIG.romanticLines.length]; lines.style.opacity = 1; },140);
+      lines.style.opacity=0;
+      setTimeout(()=>{ lines.textContent=CONFIG.romanticLines[i%CONFIG.romanticLines.length]; lines.style.opacity=1; },140);
     }
     setMessage(msgIndex);
 
@@ -256,7 +227,7 @@
         const b=document.createElement('div'); b.className='butterfly';
         b.style.setProperty('--sx', rand(-10,10)+'vw');
         b.style.setProperty('--sy', rand(10,80)+'vh');
-        b.style.animation = `fly ${rand(12,18)}s linear ${rand(0,6)}s infinite`;
+        b.style.animation=`fly ${rand(12,18)}s linear ${rand(0,6)}s infinite`;
         const span=document.createElement('span'); span.textContent='🦋';
         b.appendChild(span); butterflies.appendChild(b);
       }
@@ -284,7 +255,6 @@
     function nextMessage(){ msgIndex=(msgIndex+1)%CONFIG.romanticLines.length; setMessage(msgIndex); }
     heart.addEventListener('click', nextMessage);
 
-    // الصوت
     const audio=new Audio(CONFIG.musicFile);
     audio.loop=true; audio.preload='auto'; audio.volume=CONFIG.startVolume;
     playBtn.addEventListener('click', async ()=>{
@@ -293,7 +263,6 @@
     });
     vol.addEventListener('input', ()=> audio.volume=parseFloat(vol.value));
 
-    // بدء العرض
     async function startShow(){
       if(document.documentElement.requestFullscreen){ try{ await document.documentElement.requestFullscreen(); }catch(_){} }
       buildClouds(); buildRain(); buildPetals(); buildButterflies(); buildFireflies(); buildBokeh();
@@ -304,7 +273,6 @@
     }
     overlay.addEventListener('click', startShow, {once:true});
 
-    // نجوم شاشة البداية
     for(let i=0;i<40;i++){
       const s=document.createElement('div'); s.className='spark';
       s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
@@ -314,3 +282,4 @@
   </script>
 </body>
 </html>
+```
