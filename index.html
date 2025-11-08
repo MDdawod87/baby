@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>من حمودي إلى حنونتي — مفاجأة</title>
+  <style>
+    :root{
+      --bg1:#071021; /* deep night */
+      --bg2:#2b0b26; /* dusky purple */
+      --rose:#e11d48;
+      --butter:#ffd6ea;
+      --text:#fff;
+      --glass: rgba(255,255,255,0.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;padding:0;font-family: 'Arial', sans-serif;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(255,255,255,0.03), transparent), linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);overflow:hidden;display:flex;align-items:center;justify-content:center;
+    }
+
+    .card{
+      width:min(980px,96vw);height:min(720px,92vh);border-radius:18px;position:relative;overflow:hidden;padding:28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 18px 40px rgba(0,0,0,0.55);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      backdrop-filter: blur(6px);
+    }
+
+    /* decorative glow behind heart */
+    .glow{position:absolute;width:600px;height:600px;border-radius:50%;left:50%;top:30%;transform:translate(-50%,-30%);background:radial-gradient(circle at 35% 30%, rgba(255,107,129,0.14), transparent 25%), radial-gradient(circle at 70% 70%, rgba(255,201,217,0.06), transparent 28%);filter:blur(36px);z-index:1}
+
+    /* animated petals and butterflies */
+    .sprite{position:absolute;will-change:transform,opacity;pointer-events:none;z-index:2}
+    @keyframes fallPetal{0%{transform:translateY(-20vh) rotate(0deg)}50%{opacity:1}100%{transform:translateY(120vh) rotate(720deg);opacity:0}}
+    @keyframes floatButter{0%{transform:translateY(0) translateX(0) rotate(-10deg)}50%{transform:translateY(-8vh) translateX(6vw) rotate(10deg)}100%{transform:translateY(0) translateX(0) rotate(-10deg)}}
+
+    /* heart area */
+    .center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:16px}
+    .heart{width:200px;height:200px;transform:scale(1);animation:heartbeat 1.05s ease-in-out infinite;filter:drop-shadow(0 12px 28px rgba(0,0,0,0.45));cursor:pointer}
+    @keyframes heartbeat{0%{transform:scale(.95)}30%{transform:scale(1.06)}60%{transform:scale(.98)}100%{transform:scale(.95)}}
+    .message{font-size:22px;text-align:center;line-height:1.4;max-width:84%;opacity:0;transform:translateY(16px);transition:all .8s cubic-bezier(.2,.9,.3,1)}
+    .message.show{opacity:1;transform:translateY(0)}
+    .fromto{font-weight:800;font-size:30px;margin-top:6px}
+    .sub{font-size:14px;opacity:.9}
+
+    /* controls */
+    .controls{position:absolute;right:16px;top:16px;z-index:6;display:flex;gap:10px}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:12px;color:var(--text);cursor:pointer;font-size:13px}
+
+    /* audio controls */
+    .audio-bar{position:absolute;left:16px;top:16px;z-index:6;display:flex;gap:8px;align-items:center}
+    .volume{width:100px}
+
+    .footer{position:absolute;left:16px;bottom:12px;font-size:12px;opacity:.8;z-index:6}
+
+    /* start overlay */
+    .overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.75));display:flex;align-items:center;justify-content:center;z-index:999}
+    .overlay .panel{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);padding:22px 26px;border-radius:14px;text-align:center}
+    .overlay .title{font-size:20px;margin:0 0 8px}
+    .overlay .note{font-size:13px;opacity:.9;margin-top:8px}
+
+    @media (max-width:520px){.heart{width:140px;height:140px}.fromto{font-size:22px}.message{font-size:18px}}
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="glow" aria-hidden="true"></div>
+
+    <div class="controls">
+      <button class="btn" id="replay">إعادة تشغيل</button>
+      <button class="btn" id="download">تحميل</button>
+    </div>
+
+    <div class="audio-bar" id="aBar">
+      <button class="btn" id="playPause">تشغيل ♫</button>
+      <label style="font-size:13px">مستوى الصوت</label>
+      <input id="vol" class="volume" type="range" min="0" max="1" step="0.01" value="0.65">
+    </div>
+
+    <div class="center" id="center">
+      <div class="heart" id="heart" title="اضغطي لإعادة الأنيميشن" aria-hidden="true">
+        <!-- prettier heart with gradient -->
+        <svg viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
+              <stop offset="0%" stop-color="#ff8fa3"/>
+              <stop offset="100%" stop-color="#ff5578"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#g1)" d="M23.6 0c-2.7 0-5.1 1.6-6.6 3.9C15.5 1.6 13.1 0 10.4 0 4.6 0 0 4.6 0 10.4c0 6.6 6.6 11.1 16 18.9 9.4-7.8 16-12.3 16-18.9C32 4.6 27.4 0 21.6 0z"/>
+        </svg>
+      </div>
+
+      <div class="message" id="msg">
+        <div class="lines">إليكِ يا أحلى وردة، قلبي وكل أنفاسِي إلكِ.</div>
+        <div class="fromto" id="fromTo">من حمودي إلى حنونتي</div>
+        <div class="sub">اضغطي على القلب أو زر "إعادة تشغيل" لتعيد الأنيميشن ✨</div>
+      </div>
+    </div>
+
+    <div class="footer">💌 تصميم بسيط ورومانسي — عدّل النص في CONFIG داخل الكود</div>
+  </div>
+
+  <!-- start overlay for autoplay/fullscreen permission -->
+  <div class="overlay" id="overlay" hidden>
+    <div class="panel">
+      <p class="title">جاهزة للمفاجأة؟</p>
+      <button class="btn" id="startBtn">ابدئي الآن • كاملة الشاشة ♪</button>
+      <p class="note">المتصفحات تمنع الصوت تلقائيًا. اضغطي للبدء والتبديل لوضع ملء الشاشة.</p>
+    </div>
+  </div>
+
+  <script>
+    // ===== CONFIG =====
+    const CONFIG = {
+      sender: 'حمودي',
+      receiver: 'حنونتي',
+      messageLines: [
+        'إليكِ يا أحلى وردة، قلبي وكل أنفاسِي إلكِ.',
+        'يا روحي، كل يوم بحبك أكتر.'
+      ],
+      petalCount: 20,
+      butterflyCount: 9,
+      petalEmoji: '🌹',
+      butterflyEmoji: '🦋',
+      musicFile: 'romantic-guitar.mp3' // ضع ملفًا بهذا الاسم بجانب الصفحة
+    }
+    // ===================
+
+    const card = document.getElementById('card');
+    const msg = document.getElementById('msg');
+    const fromTo = document.getElementById('fromTo');
+    const heart = document.getElementById('heart');
+
+    fromTo.textContent = `من ${CONFIG.sender} إلى ${CONFIG.receiver}`;
+    msg.querySelector('.lines').textContent = CONFIG.messageLines.join('\n');
+
+    const rand = (min,max)=> Math.random()*(max-min)+min;
+
+    // create petals
+    for(let i=0;i<CONFIG.petalCount;i++){
+      const p = document.createElement('div');
+      p.className='sprite';p.textContent = CONFIG.petalEmoji;
+      const left = rand(-10,110);
+      p.style.left = left+'%';
+      p.style.top = rand(-20,5)+'%';
+      const dur = rand(8,18);
+      const delay = rand(0,6);
+      p.style.animation = `fallPetal ${dur}s linear ${delay}s infinite`;
+      p.style.fontSize = rand(18,36)+'px';
+      p.style.opacity = rand(0.6,0.98);
+      p.style.transform = `translateX(${rand(-60,60)}px)`;
+      card.appendChild(p);
+    }
+
+    // create butterflies
+    for(let i=0;i<CONFIG.butterflyCount;i++){
+      const b = document.createElement('div');
+      b.className='sprite';b.textContent = CONFIG.butterflyEmoji;
+      const left = rand(6,92);
+      const top = rand(10,70);
+      b.style.left = left+'%';b.style.top = top+'%';
+      const dur = rand(6,14);
+      const delay = rand(0,4);
+      b.style.animation = `floatButter ${dur}s ease-in-out ${delay}s infinite`;
+      b.style.fontSize = rand(22,42)+'px';
+      b.style.opacity = rand(0.75,1);
+      card.appendChild(b);
+    }
+
+    // reveal message
+    setTimeout(()=> msg.classList.add('show'),900);
+
+    // replay animation: restart CSS animations by toggling elements
+    function replay(){
+      // restart heart by toggling class
+      heart.style.animation='none';
+      void heart.offsetWidth; // reflow
+      heart.style.animation='heartbeat 1.05s ease-in-out infinite';
+
+      // restart sprites
+      const sprites = Array.from(document.querySelectorAll('.sprite'));
+      sprites.forEach((s)=>{
+        s.style.animation = 'none';
+        void s.offsetWidth;
+        if(s.textContent === CONFIG.petalEmoji){
+          const dur = rand(8,18); const delay = rand(0,6);
+          s.style.animation = `fallPetal ${dur}s linear ${delay}s infinite`;
+          s.style.left = rand(-10,110)+'%';
+        } else {
+          const dur = rand(6,14); const delay = rand(0,4);
+          s.style.animation = `floatButter ${dur}s ease-in-out ${delay}s infinite`;
+          s.style.left = rand(6,92)+'%'; s.style.top = rand(10,70)+'%';
+        }
+      });
+
+      // flash message
+      msg.classList.remove('show');
+      setTimeout(()=> msg.classList.add('show'),60);
+    }
+
+    heart.addEventListener('click', replay);
+    document.getElementById('replay').addEventListener('click', replay);
+
+    // audio handling
+    let audio = new Audio(CONFIG.musicFile);
+    audio.loop = true; audio.volume = 0.65; audio.preload = 'auto';
+    const playBtn = document.getElementById('playPause');
+    const vol = document.getElementById('vol');
+
+    playBtn.addEventListener('click', async ()=>{
+      if(audio.paused){
+        try{ await audio.play(); playBtn.textContent='إيقاف'; }
+        catch(e){
+          document.getElementById('overlay').hidden = false;
+        }
+      } else { audio.pause(); playBtn.textContent='تشغيل ♫'; }
+    });
+
+    vol.addEventListener('input', ()=>{ audio.volume = vol.value; });
+
+    // try autoplay; if blocked show overlay button
+    async function tryAutoplay(){
+      try{
+        await audio.play();
+        playBtn.textContent='إيقاف';
+      }catch(e){
+        document.getElementById('overlay').hidden = false;
+      }
+    }
+    document.addEventListener('DOMContentLoaded', tryAutoplay);
+
+    // overlay start: request fullscreen and start audio
+    async function enterFullscreen(){
+      const docEl = document.documentElement;
+      if(docEl.requestFullscreen){
+        try{ await docEl.requestFullscreen(); }catch(_){/* ignore */}
+      }
+    }
+    document.getElementById('startBtn').addEventListener('click', async ()=>{
+      await enterFullscreen();
+      try{ await audio.play(); playBtn.textContent='إيقاف'; }catch(_){/* ignore */}
+      document.getElementById('overlay').hidden = true;
+    });
+
+    // download file
+    document.getElementById('download').addEventListener('click', ()=>{
+      const doc = `<!doctype html>\n${document.documentElement.outerHTML}`;
+      const blob = new Blob([doc],{type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'index.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // keyboard shortcut R to replay
+    window.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='r') replay(); });
+
+    // accessibility
+    msg.setAttribute('aria-live','polite');
+  </script>
+</body>
+</html>
