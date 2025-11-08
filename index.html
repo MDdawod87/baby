@@ -1,5 +1,3 @@
-ارفع هذا الملف كـ **index.html**. لا يحتوي أي نصوص شرح. شاشة بداية سوداء متحركة بنص كبير «🍯 اضغطي هنا يا عسل»، مؤثرات (يراعات + قلوب بوكيه)، والصوت من ملفك، والضغط على القلب يبدّل 10 رسائل.
-
 ```html
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -8,95 +6,107 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>من حمودي إلى حنونتي — مفاجأة</title>
   <style>
-    :root{--bg1:#071021;--bg2:#2b0b26;--text:#fff;--glass:rgba(255,255,255,.06)}
-    *{box-sizing:border-box} html,body{height:100%}
+    :root{
+      --bg1:#061022; --bg2:#2a0b26; --text:#fff; --glass:rgba(255,255,255,.07);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      margin:0;padding:0;font-family:Arial,system-ui,sans-serif;
-      background:radial-gradient(1200px 600px at 10% 20%,rgba(255,255,255,.03),transparent),
+      margin:0; font-family:Arial,system-ui,sans-serif; color:var(--text);
+      background:radial-gradient(1200px 600px at 12% 18%,rgba(255,255,255,.03),transparent),
                  linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:var(--text);overflow:hidden;display:flex;align-items:center;justify-content:center
+      overflow:hidden;
     }
 
+    /* شاشة كاملة */
     .card{
-      width:min(980px,96vw);height:min(720px,92vh);border-radius:22px;position:relative;overflow:hidden;padding:28px;
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
       background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
-      box-shadow:0 18px 40px rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;
-      backdrop-filter:blur(6px);opacity:0;transition:opacity .9s
+      backdrop-filter:blur(6px);
+      opacity:0; transition:opacity .9s ease;
     }
     .card.show{opacity:1}
 
-    .glow{position:absolute;width:760px;height:760px;border-radius:50%;left:50%;top:38%;
-      transform:translate(-50%,-38%);
+    /* طبقات */
+    .layer{position:absolute; inset:0; pointer-events:none}
+    .glow{position:absolute; width:120vmin; height:120vmin; left:50%; top:45%;
+      transform:translate(-50%,-45%); border-radius:50%;
       background:
         radial-gradient(circle at 40% 30%, rgba(255,120,140,.22), transparent 30%),
         radial-gradient(circle at 70% 70%, rgba(255,220,235,.12), transparent 28%);
-      filter:blur(46px);z-index:1;animation:hue 10s linear infinite}
-    @keyframes hue{0%{filter:hue-rotate(0) blur(46px)}100%{filter:hue-rotate(360deg) blur(46px)}}
+      filter:blur(42px); animation:hue 12s linear infinite; z-index:1
+    }
+    @keyframes hue{to{filter:hue-rotate(360deg) blur(42px)}}
 
-    .layer{position:absolute;inset:0;z-index:2;pointer-events:none}
+    /* سحب */
+    .cloud{position:absolute; top:var(--t); left:-30vw; width:var(--w); height:var(--h);
+      filter:blur(8px); opacity:.28; background:radial-gradient(ellipse at 30% 40%, #fff 0 40%, transparent 55%),
+                                 radial-gradient(ellipse at 60% 50%, #fff 0 45%, transparent 60%),
+                                 radial-gradient(ellipse at 45% 60%, #fff 0 35%, transparent 55%);
+      animation:cloudMove var(--dur) linear infinite; z-index:2
+    }
+    @keyframes cloudMove{to{transform:translateX(140vw)}}
 
-    /* يراعات */
-    .firefly{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,200,.9);
-      box-shadow:0 0 14px rgba(255,255,170,.95),0 0 24px rgba(255,255,170,.6);
-      animation:fly var(--dur) ease-in-out infinite}
-    @keyframes fly{
-      0%{transform:translate(var(--x0),var(--y0)) scale(.9)}
-      50%{transform:translate(var(--x1),var(--y1)) scale(1)}
-      100%{transform:translate(var(--x0),var(--y0)) scale(.9)}
+    /* مطر */
+    .rain .drop{position:absolute; width:2px; height:14px; background:rgba(255,255,255,.28);
+      left:var(--x); top:-20vh; transform:rotate(10deg);
+      animation:rainFall var(--d) linear var(--delay) infinite; filter:blur(.2px)
+    }
+    @keyframes rainFall{to{transform:translate(0,110vh) rotate(10deg)}}
+
+    /* بتلات ورد */
+    .petal{position:absolute; font-size:22px; left:var(--px); top:-10vh; z-index:3;
+      animation:petalFall var(--pdur) linear var(--pdelay) infinite; opacity:.95
+    }
+    @keyframes petalFall{
+      0%{transform:translate(0,-10vh) rotate(0)}
+      60%{opacity:.95}
+      100%{transform:translate(0,115vh) rotate(720deg); opacity:0}
     }
 
-    /* قلوب بوكيه */
-    .bokeh{position:absolute;width:16px;height:16px;opacity:.13;filter:blur(1px);
-      background:conic-gradient(from 45deg,#fff 0 90deg,transparent 90deg),conic-gradient(from -45deg,#fff 0 90deg,transparent 90deg);
-      transform:translate(-50%,-50%) rotate(45deg);border-radius:2px;animation:floatB var(--bdur) linear infinite}
-    .bokeh:before,.bokeh:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff}
-    .bokeh:before{left:-8px;top:-8px}.bokeh:after{left:8px;top:-8px}
-    @keyframes floatB{0%{transform:translate(var(--bx),110vh) rotate(45deg)}100%{transform:translate(calc(var(--bx) + 4vw),-10vh) rotate(45deg)}}
-
-    .center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:18px}
-    .heart{width:230px;height:230px;cursor:pointer;filter:drop-shadow(0 12px 28px rgba(0,0,0,.45));animation:heartbeat 1.05s ease-in-out infinite}
+    /* المركز */
+    .center{position:relative; z-index:5; display:flex; flex-direction:column; align-items:center; gap:18px}
+    .heart{width:min(28vmin,260px); height:min(28vmin,260px); cursor:pointer;
+      filter:drop-shadow(0 14px 30px rgba(0,0,0,.5)); animation:heartbeat 1.05s ease-in-out infinite}
     @keyframes heartbeat{0%{transform:scale(.95)}30%{transform:scale(1.06)}60%{transform:scale(.98)}100%{transform:scale(.95)}}
-    .message{font-size:26px;text-align:center;line-height:1.55;max-width:92%;
-      opacity:0;transform:translateY(16px);transition:all .7s cubic-bezier(.2,.9,.3,1)}
-    .message.show{opacity:1;transform:translateY(0)}
-    .fromto{font-weight:800;font-size:30px;margin-top:8px}
+    .message{font-size:clamp(18px,2.6vmin,26px); line-height:1.55; text-align:center; max-width:90ch;
+      opacity:0; transform:translateY(16px); transition:.7s cubic-bezier(.2,.9,.3,1)}
+    .message.show{opacity:1; transform:translateY(0)}
+    .fromto{font-size:clamp(18px,2.6vmin,26px); font-weight:800}
 
-    .controls{position:absolute;right:16px;top:16px;z-index:6;display:flex;gap:10px}
-    .btn{background:var(--glass);border:1px solid rgba(255,255,255,.06);
-      padding:10px 14px;border-radius:12px;color:var(--text);cursor:pointer;font-size:13px}
-    .audio-bar{position:absolute;left:16px;top:16px;z-index:6;display:flex;gap:8px;align-items:center}
+    .controls{position:fixed; right:16px; top:16px; display:flex; gap:10px; z-index:6}
+    .btn{background:var(--glass); border:1px solid rgba(255,255,255,.08); color:var(--text);
+      padding:10px 14px; border-radius:12px; font-size:13px; cursor:pointer}
+    .audio-bar{position:fixed; left:16px; top:16px; display:flex; gap:8px; align-items:center; z-index:6}
     .volume{width:120px}
 
-    /* شاشة البداية المتحركة */
-    .overlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999;cursor:pointer}
-    .tap{display:flex;flex-direction:column;align-items:center;gap:18px}
-    .tap .emoji{font-size:42px;animation:pulse 1.2s ease-in-out infinite}
+    /* شاشة البداية */
+    .overlay{position:fixed; inset:0; background:#000; display:flex; align-items:center; justify-content:center; z-index:999; cursor:pointer}
+    .tap{display:flex; flex-direction:column; align-items:center; gap:20px}
+    .tap .emoji{font-size:48px; animation:pulse 1.2s ease-in-out infinite}
     .tap .text{
-      font-size:38px;font-weight:900;letter-spacing:.6px;line-height:1.1;text-align:center;
+      font-size:clamp(28px,6vmin,56px); font-weight:900; letter-spacing:.6px;
       background:linear-gradient(90deg,#ffe082,#ffd54f,#ffca28,#ffc107,#ffb300,#ffa000);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
+      -webkit-background-clip:text; background-clip:text; color:transparent;
       text-shadow:0 2px 14px rgba(255,193,7,.28);
-      animation:shine 2.8s linear infinite, bob 1.7s ease-in-out infinite
+      animation:shine 2.6s linear infinite, bob 1.6s ease-in-out infinite; user-select:none
     }
-    .spark{position:absolute;width:6px;height:6px;border-radius:50%;background:#ffd54f;box-shadow:0 0 12px #ffd54f}
-    @keyframes shine{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
-    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-    @keyframes pulse{0%{transform:scale(.96)}50%{transform:scale(1.06)}100%{transform:scale(.96)}}
+    .spark{position:absolute; width:6px; height:6px; border-radius:50%; background:#ffd54f; box-shadow:0 0 12px #ffd54f}
+    @keyframes shine{to{filter:hue-rotate(360deg)}}
+    @keyframes bob{50%{transform:translateY(-8px)}}
+    @keyframes pulse{50%{transform:scale(1.06)}}
 
-    @media (max-width:520px){
-      .heart{width:170px;height:170px}
-      .fromto{font-size:22px}
-      .message{font-size:20px}
-      .tap .text{font-size:30px}
-    }
+    @media (max-width:520px){ .message{font-size:18px} }
   </style>
 </head>
 <body>
   <div class="card" id="card" aria-live="polite">
     <div class="glow" aria-hidden="true"></div>
 
-    <div class="layer" id="fireflies" aria-hidden="true"></div>
-    <div class="layer" id="bokeh" aria-hidden="true"></div>
+    <!-- طبقات مؤثرات -->
+    <div class="layer" id="clouds" aria-hidden="true"></div>
+    <div class="layer rain" id="rain" aria-hidden="true"></div>
+    <div class="layer" id="petals" aria-hidden="true"></div>
 
     <div class="controls">
       <button class="btn" id="replay">إعادة تشغيل</button>
@@ -128,7 +138,7 @@
     </div>
   </div>
 
-  <!-- شاشة سوداء متحركة -->
+  <!-- شاشة بداية -->
   <div class="overlay" id="overlay" title="اضغطي للبدء">
     <div class="tap">
       <div class="emoji">🍯✨</div>
@@ -139,14 +149,16 @@
   <script>
     // ===== CONFIG =====
     const CONFIG = {
-      sender: 'حمودي',
-      receiver: 'حنونتي',
-      startVolume: 0.70,          // 0..1
-      fireflyCount: 26,
-      bokehCount: 28,
-      // اسم ملف الصوت الذي رفعته بجانب index.html
-      musicFile: 'New-Lands-Long-version(chosic.com).mp3',
-      romanticLines: [
+      sender:'حمودي', receiver:'حنونتي',
+      startVolume:0.70,
+      clouds: [ // top %, width, height, duration s
+        ['8%','60vw','22vh',70], ['18%','40vw','16vh',55], ['28%','50vw','18vh',62],
+        ['60%','65vw','22vh',74], ['72%','42vw','16vh',58]
+      ],
+      rainDrops: 120,
+      petalCount: 34,
+      musicFile:'New-Lands-Long-version(chosic.com).mp3',
+      romanticLines:[
         '❤️ إنتِ نبض قلبي وحكايتي الحلوة.',
         '✨ كل يوم بحبك أكتر من قبله.',
         '🌹 من بين كل الناس، عيوني اختارتك.',
@@ -162,96 +174,91 @@
     // ===================
 
     const card = document.getElementById('card');
-    const lines = document.getElementById('lines');
+    const clouds = document.getElementById('clouds');
+    const rain   = document.getElementById('rain');
+    const petals = document.getElementById('petals');
+    const overlay= document.getElementById('overlay');
+    const lines  = document.getElementById('lines');
     const fromTo = document.getElementById('fromTo');
     const heart  = document.getElementById('heart');
-    const overlay = document.getElementById('overlay');
-    const playBtn = document.getElementById('playPause');
-    const vol = document.getElementById('vol');
-    const fireflies = document.getElementById('fireflies');
-    const bokeh = document.getElementById('bokeh');
+    const playBtn= document.getElementById('playPause');
+    const vol    = document.getElementById('vol');
 
     fromTo.textContent = `من ${CONFIG.sender} إلى ${CONFIG.receiver}`;
 
-    // sparkles على شاشة البداية
-    for(let i=0;i<40;i++){
-      const s=document.createElement('div'); s.className='spark';
-      s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
-      s.style.opacity=Math.random()*0.9+0.1;
-      s.style.transform=`scale(${Math.random()*0.8+0.6})`;
-      overlay.appendChild(s);
-    }
-
-    // رسالة أولى
     let msgIndex = 0;
     function setMessage(i){
       lines.style.opacity = 0;
-      setTimeout(()=>{
-        lines.textContent = CONFIG.romanticLines[i % CONFIG.romanticLines.length];
-        lines.style.opacity = 1;
-      },140);
+      setTimeout(()=>{ lines.textContent = CONFIG.romanticLines[i % CONFIG.romanticLines.length]; lines.style.opacity = 1; },140);
     }
     setMessage(msgIndex);
 
-    const rand = (min,max)=> Math.random()*(max-min)+min;
+    const rand=(a,b)=>Math.random()*(b-a)+a;
 
-    function buildFireflies(){
-      for(let i=0;i<CONFIG.fireflyCount;i++){
-        const f = document.createElement('div');
-        f.className='firefly';
-        const w = window.innerWidth, h = window.innerHeight;
-        f.style.setProperty('--x0', Math.floor(rand(-0.1*w, 1.1*w))+'px');
-        f.style.setProperty('--y0', Math.floor(rand(-0.1*h, 1.1*h))+'px');
-        f.style.setProperty('--x1', Math.floor(rand(-0.1*w, 1.1*w))+'px');
-        f.style.setProperty('--y1', Math.floor(rand(-0.1*h, 1.1*h))+'px');
-        f.style.setProperty('--dur', rand(8,16)+'s');
-        fireflies.appendChild(f);
+    function buildClouds(){
+      CONFIG.clouds.forEach(([t,w,h,d])=>{
+        const c=document.createElement('div'); c.className='cloud';
+        c.style.setProperty('--t',t); c.style.setProperty('--w',w); c.style.setProperty('--h',h);
+        c.style.setProperty('--dur',d+'s'); clouds.appendChild(c);
+      });
+    }
+    function buildRain(){
+      for(let i=0;i<CONFIG.rainDrops;i++){
+        const d=document.createElement('div'); d.className='drop';
+        d.style.setProperty('--x', Math.floor(rand(0,100))+'vw');
+        d.style.setProperty('--d', rand(1.8,2.8)+'s');
+        d.style.setProperty('--delay', rand(0,2)+'s');
+        rain.appendChild(d);
       }
     }
-    function buildBokeh(){
-      for(let i=0;i<CONFIG.bokehCount;i++){
-        const d = document.createElement('div');
-        d.className='bokeh';
-        d.style.setProperty('--bx', rand(0,100)+'vw');
-        d.style.setProperty('--bdur', rand(12,22)+'s');
-        d.style.opacity = rand(.06,.18);
-        bokeh.appendChild(d);
+    function buildPetals(){
+      for(let i=0;i<CONFIG.petalCount;i++){
+        const p=document.createElement('div'); p.className='petal'; p.textContent='🌹';
+        p.style.setProperty('--px', Math.floor(rand(-10,110))+'vw');
+        p.style.setProperty('--pdur', rand(9,16)+'s');
+        p.style.setProperty('--pdelay', rand(0,6)+'s');
+        p.style.fontSize = Math.floor(rand(18,30))+'px';
+        petals.appendChild(p);
       }
     }
 
-    function nextMessage(){
-      msgIndex = (msgIndex + 1) % CONFIG.romanticLines.length;
-      setMessage(msgIndex);
-    }
+    function nextMessage(){ msgIndex=(msgIndex+1)%CONFIG.romanticLines.length; setMessage(msgIndex); }
     heart.addEventListener('click', nextMessage);
-    document.getElementById('replay').addEventListener('click', nextMessage);
+    document.getElementById('replay').addEventListener('click', ()=>{ nextMessage(); });
 
     // الصوت
-    const audio = new Audio(CONFIG.musicFile);
-    audio.preload = 'auto'; audio.loop = true; audio.volume = CONFIG.startVolume;
+    const audio=new Audio(CONFIG.musicFile);
+    audio.loop=true; audio.preload='auto'; audio.volume=CONFIG.startVolume;
     playBtn.addEventListener('click', async ()=>{
       if(audio.paused){ try{ await audio.play(); playBtn.textContent='إيقاف'; }catch(_){} }
-      else{ audio.pause(); playBtn.textContent='تشغيل ♫'; }
+      else { audio.pause(); playBtn.textContent='تشغيل ♫'; }
     });
-    vol.addEventListener('input', ()=> audio.volume = parseFloat(vol.value));
+    vol.addEventListener('input', ()=> audio.volume=parseFloat(vol.value));
 
-    // البدء
+    // بدء العرض
     async function startShow(){
       if(document.documentElement.requestFullscreen){ try{ await document.documentElement.requestFullscreen(); }catch(_){} }
-      buildFireflies(); buildBokeh();
+      buildClouds(); buildRain(); buildPetals();
       card.classList.add('show');
       document.getElementById('msg')?.classList?.add('show');
       try{ await audio.play(); playBtn.textContent='إيقاف'; }catch(_){}
       overlay.style.display='none';
     }
-    overlay.addEventListener('click', startShow, { once:true });
+    overlay.addEventListener('click', startShow, {once:true});
 
-    // تنزيل نسخة من الصفحة
+    // نجوم صغيرة على شاشة البداية
+    for(let i=0;i<40;i++){
+      const s=document.createElement('div'); s.className='spark';
+      s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
+      s.style.opacity=Math.random()*0.9+0.1; s.style.transform=`scale(${Math.random()*0.8+0.6})`;
+      overlay.appendChild(s);
+    }
+
+    // تنزيل نسخة
     document.getElementById('download').addEventListener('click', ()=>{
-      const doc = `<!doctype html>\n${document.documentElement.outerHTML}`;
-      const blob = new Blob([doc],{type:'text/html'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'index.html';
+      const doc='<!doctype html>\\n'+document.documentElement.outerHTML;
+      const blob=new Blob([doc],{type:'text/html'}); const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='index.html';
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
   </script>
