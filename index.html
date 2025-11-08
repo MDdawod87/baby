@@ -1,4 +1,4 @@
-هذا ملف **index.html** كامل. يشغّل الصوت الذي رفعتَه ويضيف شاشة بداية متحركة، ويبدّل 10 رسائل رومانسية عند كل ضغطة على القلب.
+ارفع هذا الملف كـ **index.html**. لا يحتوي أي نصوص شرح. شاشة بداية سوداء متحركة بنص كبير «🍯 اضغطي هنا يا عسل»، مؤثرات (يراعات + قلوب بوكيه)، والصوت من ملفك، والضغط على القلب يبدّل 10 رسائل.
 
 ```html
 <!doctype html>
@@ -18,27 +18,26 @@
     }
 
     .card{
-      width:min(980px,96vw);height:min(720px,92vh);border-radius:18px;position:relative;overflow:hidden;padding:28px;
+      width:min(980px,96vw);height:min(720px,92vh);border-radius:22px;position:relative;overflow:hidden;padding:28px;
       background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
       box-shadow:0 18px 40px rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;
       backdrop-filter:blur(6px);opacity:0;transition:opacity .9s
     }
     .card.show{opacity:1}
 
-    .glow{position:absolute;width:720px;height:720px;border-radius:50%;left:50%;top:35%;
-      transform:translate(-50%,-35%);
+    .glow{position:absolute;width:760px;height:760px;border-radius:50%;left:50%;top:38%;
+      transform:translate(-50%,-38%);
       background:
-        radial-gradient(circle at 40% 30%, rgba(255,120,140,.18), transparent 30%),
-        radial-gradient(circle at 70% 70%, rgba(255,220,235,.10), transparent 28%);
-      filter:blur(42px);z-index:1;animation:glowHue 9s linear infinite}
-    @keyframes glowHue{0%{filter:hue-rotate(0deg) blur(42px)}100%{filter:hue-rotate(360deg) blur(42px)}}
+        radial-gradient(circle at 40% 30%, rgba(255,120,140,.22), transparent 30%),
+        radial-gradient(circle at 70% 70%, rgba(255,220,235,.12), transparent 28%);
+      filter:blur(46px);z-index:1;animation:hue 10s linear infinite}
+    @keyframes hue{0%{filter:hue-rotate(0) blur(46px)}100%{filter:hue-rotate(360deg) blur(46px)}}
 
-    /* طبقات مؤثرات */
     .layer{position:absolute;inset:0;z-index:2;pointer-events:none}
 
     /* يراعات */
     .firefly{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,200,.9);
-      box-shadow:0 0 14px rgba(255,255,170,.9),0 0 24px rgba(255,255,170,.6);opacity:.95;
+      box-shadow:0 0 14px rgba(255,255,170,.95),0 0 24px rgba(255,255,170,.6);
       animation:fly var(--dur) ease-in-out infinite}
     @keyframes fly{
       0%{transform:translate(var(--x0),var(--y0)) scale(.9)}
@@ -47,52 +46,55 @@
     }
 
     /* قلوب بوكيه */
-    .bokeh{position:absolute;width:14px;height:14px;opacity:.12;filter:blur(1px);
+    .bokeh{position:absolute;width:16px;height:16px;opacity:.13;filter:blur(1px);
       background:conic-gradient(from 45deg,#fff 0 90deg,transparent 90deg),conic-gradient(from -45deg,#fff 0 90deg,transparent 90deg);
-      transform:translate(-50%,-50%) rotate(45deg);border-radius:2px}
-    .bokeh:before,.bokeh:after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#fff}
-    .bokeh:before{left:-7px;top:-7px}.bokeh:after{left:7px;top:-7px}
-    .bokeh{animation:floatB var(--bdur) linear infinite}
+      transform:translate(-50%,-50%) rotate(45deg);border-radius:2px;animation:floatB var(--bdur) linear infinite}
+    .bokeh:before,.bokeh:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff}
+    .bokeh:before{left:-8px;top:-8px}.bokeh:after{left:8px;top:-8px}
     @keyframes floatB{0%{transform:translate(var(--bx),110vh) rotate(45deg)}100%{transform:translate(calc(var(--bx) + 4vw),-10vh) rotate(45deg)}}
 
-    .center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:16px}
-    .heart{width:220px;height:220px;cursor:pointer;filter:drop-shadow(0 12px 28px rgba(0,0,0,.45));animation:heartbeat 1.05s ease-in-out infinite}
+    .center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:18px}
+    .heart{width:230px;height:230px;cursor:pointer;filter:drop-shadow(0 12px 28px rgba(0,0,0,.45));animation:heartbeat 1.05s ease-in-out infinite}
     @keyframes heartbeat{0%{transform:scale(.95)}30%{transform:scale(1.06)}60%{transform:scale(.98)}100%{transform:scale(.95)}}
-    .message{font-size:24px;text-align:center;line-height:1.5;max-width:90%;
+    .message{font-size:26px;text-align:center;line-height:1.55;max-width:92%;
       opacity:0;transform:translateY(16px);transition:all .7s cubic-bezier(.2,.9,.3,1)}
     .message.show{opacity:1;transform:translateY(0)}
-    .fromto{font-weight:800;font-size:30px;margin-top:6px}
+    .fromto{font-weight:800;font-size:30px;margin-top:8px}
 
     .controls{position:absolute;right:16px;top:16px;z-index:6;display:flex;gap:10px}
     .btn{background:var(--glass);border:1px solid rgba(255,255,255,.06);
       padding:10px 14px;border-radius:12px;color:var(--text);cursor:pointer;font-size:13px}
     .audio-bar{position:absolute;left:16px;top:16px;z-index:6;display:flex;gap:8px;align-items:center}
-    .volume{width:110px}
+    .volume{width:120px}
 
-    /* شاشة البداية */
+    /* شاشة البداية المتحركة */
     .overlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999;cursor:pointer}
-    .tapWrap{display:flex;flex-direction:column;align-items:center;gap:14px}
-    .tapText{
-      font-size:28px;font-weight:800;letter-spacing:.5px;
+    .tap{display:flex;flex-direction:column;align-items:center;gap:18px}
+    .tap .emoji{font-size:42px;animation:pulse 1.2s ease-in-out infinite}
+    .tap .text{
+      font-size:38px;font-weight:900;letter-spacing:.6px;line-height:1.1;text-align:center;
       background:linear-gradient(90deg,#ffe082,#ffd54f,#ffca28,#ffc107,#ffb300,#ffa000);
       -webkit-background-clip:text;background-clip:text;color:transparent;
-      animation:shine 2.4s linear infinite, bob 1.6s ease-in-out infinite;
-      text-shadow:0 2px 10px rgba(255,193,7,.25)
+      text-shadow:0 2px 14px rgba(255,193,7,.28);
+      animation:shine 2.8s linear infinite, bob 1.7s ease-in-out infinite
     }
-    .tapSub{font-size:14px;opacity:.8}
-    .tapEmoji{font-size:34px;animation:pulse 1.2s ease-in-out infinite}
+    .spark{position:absolute;width:6px;height:6px;border-radius:50%;background:#ffd54f;box-shadow:0 0 12px #ffd54f}
     @keyframes shine{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
-    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-    @keyframes pulse{0%{transform:scale(.95)}50%{transform:scale(1.05)}100%{transform:scale(.95)}}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes pulse{0%{transform:scale(.96)}50%{transform:scale(1.06)}100%{transform:scale(.96)}}
 
-    @media (max-width:520px){.heart{width:160px;height:160px}.fromto{font-size:22px}.message{font-size:20px}.tapText{font-size:24px}}
+    @media (max-width:520px){
+      .heart{width:170px;height:170px}
+      .fromto{font-size:22px}
+      .message{font-size:20px}
+      .tap .text{font-size:30px}
+    }
   </style>
 </head>
 <body>
   <div class="card" id="card" aria-live="polite">
     <div class="glow" aria-hidden="true"></div>
 
-    <!-- مؤثرات -->
     <div class="layer" id="fireflies" aria-hidden="true"></div>
     <div class="layer" id="bokeh" aria-hidden="true"></div>
 
@@ -102,14 +104,14 @@
     </div>
 
     <div class="audio-bar">
-      <button class="btn" id="playPause">تشغيل ♫</button>
+      <button class="btn" id="playPause">إيقاف</button>
       <label style="font-size:13px">مستوى الصوت</label>
       <input id="vol" class="volume" type="range" min="0" max="1" step="0.01" value="0.70">
     </div>
 
     <div class="center">
       <div class="heart" id="heart" title="بدّل الرسالة">
-        <svg viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
               <stop offset="0%" stop-color="#ff9bb0"/><stop offset="100%" stop-color="#ff5b7e"/>
@@ -126,12 +128,11 @@
     </div>
   </div>
 
-  <!-- شاشة سوداء مع نص/إيموجي وأنيميشن -->
+  <!-- شاشة سوداء متحركة -->
   <div class="overlay" id="overlay" title="اضغطي للبدء">
-    <div class="tapWrap">
-      <div class="tapEmoji">🍯✨</div>
-      <div class="tapText">اضغطي هنا يا عسل</div>
-      <div class="tapSub">اضغطة واحدة وتبدأ المفاجأة</div>
+    <div class="tap">
+      <div class="emoji">🍯✨</div>
+      <div class="text">اضغطي هنا يا عسل</div>
     </div>
   </div>
 
@@ -143,9 +144,8 @@
       startVolume: 0.70,          // 0..1
       fireflyCount: 26,
       bokehCount: 28,
-      // ملف الصوت الذي رفعته بجانب index.html
+      // اسم ملف الصوت الذي رفعته بجانب index.html
       musicFile: 'New-Lands-Long-version(chosic.com).mp3',
-      // رسائل رومانسية قصيرة (10)
       romanticLines: [
         '❤️ إنتِ نبض قلبي وحكايتي الحلوة.',
         '✨ كل يوم بحبك أكتر من قبله.',
@@ -173,7 +173,16 @@
 
     fromTo.textContent = `من ${CONFIG.sender} إلى ${CONFIG.receiver}`;
 
-    // تعيين أول رسالة
+    // sparkles على شاشة البداية
+    for(let i=0;i<40;i++){
+      const s=document.createElement('div'); s.className='spark';
+      s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*100+'vh';
+      s.style.opacity=Math.random()*0.9+0.1;
+      s.style.transform=`scale(${Math.random()*0.8+0.6})`;
+      overlay.appendChild(s);
+    }
+
+    // رسالة أولى
     let msgIndex = 0;
     function setMessage(i){
       lines.style.opacity = 0;
@@ -186,7 +195,6 @@
 
     const rand = (min,max)=> Math.random()*(max-min)+min;
 
-    // مؤثرات
     function buildFireflies(){
       for(let i=0;i<CONFIG.fireflyCount;i++){
         const f = document.createElement('div');
@@ -206,12 +214,11 @@
         d.className='bokeh';
         d.style.setProperty('--bx', rand(0,100)+'vw');
         d.style.setProperty('--bdur', rand(12,22)+'s');
-        d.style.opacity = rand(.05,.16);
+        d.style.opacity = rand(.06,.18);
         bokeh.appendChild(d);
       }
     }
 
-    // تبديل الرسالة عند الضغط على القلب
     function nextMessage(){
       msgIndex = (msgIndex + 1) % CONFIG.romanticLines.length;
       setMessage(msgIndex);
@@ -221,23 +228,16 @@
 
     // الصوت
     const audio = new Audio(CONFIG.musicFile);
-    audio.preload = 'auto';
-    audio.loop = true;
-    audio.volume = CONFIG.startVolume;
+    audio.preload = 'auto'; audio.loop = true; audio.volume = CONFIG.startVolume;
     playBtn.addEventListener('click', async ()=>{
-      if(audio.paused){
-        try{ await audio.play(); playBtn.textContent='إيقاف'; }catch(_){}
-      }else{
-        audio.pause(); playBtn.textContent='تشغيل ♫';
-      }
+      if(audio.paused){ try{ await audio.play(); playBtn.textContent='إيقاف'; }catch(_){} }
+      else{ audio.pause(); playBtn.textContent='تشغيل ♫'; }
     });
     vol.addEventListener('input', ()=> audio.volume = parseFloat(vol.value));
 
-    // البدء: أول ضغطة تشغل كل شيء
+    // البدء
     async function startShow(){
-      if(document.documentElement.requestFullscreen){
-        try{ await document.documentElement.requestFullscreen(); }catch(_){}
-      }
+      if(document.documentElement.requestFullscreen){ try{ await document.documentElement.requestFullscreen(); }catch(_){} }
       buildFireflies(); buildBokeh();
       card.classList.add('show');
       document.getElementById('msg')?.classList?.add('show');
